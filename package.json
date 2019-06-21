@@ -1,23 +1,19 @@
 {
-  "name": "express-ip",
+  "name": "editorjs-converter",
   "version": "1.0.2",
-  "description": "An express middleware for getting information about an IP",
+  "description": "Converts editorjs json data output to HTML, MD, JSX",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "https://github.com/CITGuru/express-ip.git",
+  "repository": "https://github.com/CITGuru/editorjs-converter.git",
   "keywords": [
-    "express",
-    "ip",
-    "geolocation",
-    "geoip",
-    "geo",
-    "middleware"
+    "editorjs"
   ],
-  "author": "Oyetoke Toby <oyetoketoby80@gmail.com> (http://medium.com/oyetoketobi)",
+  "author": "[Oyetoke Toby](http://medium.com/@oyetoketoby80) <oyetoketoby80@gmail.com> ",
   "license": "MIT",
   "dependencies": {
-    "geoip-lite": "^1.2.2"
+    "geoip-lite": "^1.2.2",
+    "turndown": "^5.0.3"
   }
 }

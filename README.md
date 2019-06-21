@@ -1,50 +1,59 @@
-# Express IP
+# Editorjs Converter
 
-This is an express module for getting IP information using geoip-lite. It can also be used as express middleware. Basically its an express middleware. So with this, you can get info about an IP.
+This converts editorjs json data into HTML and MD
 
 # Installation
 
 ```
-npm install express-ip
+npm install editorjs-converter
 ```
 
 # Usage
 
-## short
-```
-const express = require('express');
-const app = express();
-const expressip = require('express-ip');
-app.use(expressip().getIpInfoMiddleware);
+## HTML
 
-app.get('/', function (req, res) {
-    res.send(req.ipInfo);
-});
+### Example 1
 
 ```
-## full
+const converter = require('editorjs-converter');
+const data = {}
+const convertedData = converter(data, "html");
+console.log(convertedData)
 ```
-const express = require('express');
-const app = express();
-const expressip = require('express-ip');
-const PORT = process.env.PORT || 7000;
-const path = require('path');
 
-app.use(expressip().getIpInfoMiddleware);
+### Example 2
 
+```
+const converter = require('editorjs-converter');
+const data = {}
+const convertedData = converter(data).toHTML();
+console.log(convertedData)
 
-app.set("PORT", PORT);
+```
 
-app.get('/', function (req, res) {
-    res.send(req.ipInfo);
-});
+## MarkDown
 
-app.listen(app.get('PORT'), function () {
-    console.log('Express started on http://localhost:' +
-        app.get('PORT') + '; press Ctrl-C to terminate.');
-});
+### Example 1
+
+```
+const converter = require('editorjs-converter');
+const data = {}
+const convertedData = converter(data, "md");
+console.log(convertedData)
+```
+
+### Example 2
+
+```
+const converter = require('editorjs-converter');
+const data = {}
+const convertedData = converter(data).toMD();
+console.log(convertedData)
 
 ```
 
 # Author
-Oyetoke Toby <oyetoketoby80@gmail.com> (http://patreon.com/oyetoketoby)
+
+[Oyetoke Toby](http://citguru.github.io) <oyetoketoby80@gmail.com>
+
+Support me on: [Patreon](http://patreon.com/oyetoketoby)

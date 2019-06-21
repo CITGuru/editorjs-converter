@@ -1,32 +1,98 @@
-var geoip = require('geoip-lite');
+var TurndownService = require("turndown");
 
-module.exports = function () {
-    var getIpInfo = function (ip) {
-        // IPV6 addresses can include IPV4 addresses
-        // So req.ip can be '::ffff:86.3.182.58'
-        // However geoip-lite returns null for these
-        if (ip.includes('::ffff:')) {
-            ip = ip.split(':').reverse()[0]
+var turndownService = new TurndownService();
+
+module.exports = function(blocks, type = null) {
+  var wrapBlock = function(html) {
+    return `
+    <div class='ce-block'>
+      <div class='ce-block__content'>
+        ${html}
+      </div>
+    </div>
+    `;
+  };
+  var toHtml = function() {
+    let html = "";
+    let styles = {
+      header: "ce-header"
+    };
+    for ({ type, data } of blocks) {
+      if (type == "header") {
+        let _html = `<h${data.level} class="${styles.header}">${data.text}</h${
+          data.level
+        }>`;
+        html += wrapBlock(_html);
+      } else if (type == "paragraph") {
+        let _html = `<p class="ce-paragraph cdx-block">${data.text}</p>`;
+        html += wrapBlock(_html);
+      } else if (type == "list") {
+        let style = {
+          unordered: "li",
+          ordered: "ol"
+        };
+        let items = "";
+        for (item of data.items) {
+          items += `<${style[data.style]} class="cdx-list__item">
+            ${item}
+            </${style[data.style]}>`;
         }
-        var lookedUpIP = geoip.lookup(ip);
-        if ((ip === '127.0.0.1')) {
-            return {error:"This won't work on localhost"}
-        }
-        if (!lookedUpIP){
-            return { error: "Error occured while trying to process the information" }
-        }
-        return lookedUpIP;
+        html += wrapBlock(
+          `<ul class="cdx-block cdx-list cdx-list--${data.style}">
+            ${items}
+          </ul>`
+        );
+      } else if (type == "delimiter") {
+        html += wrapBlock("<div class='ce-delimiter cdx-block'></div>");
+      } else if (type == "code") {
+        html += wrapBlock(`<pre>${data.code}</pre>`);
+      } else if (type == "quote") {
+        html += wrapBlock(
+          `<blockquote class='cdx-block cdx-quote'>
+            <div class='cdx-quote__text'>${data.text}</div>
+          </blockquote>`
+        );
+      } else if (["rawTool", "rawHTML", "raw", "html"].includes(type)) {
+        html += wrapBlock(
+          `<div class='cdx-block ce-rawtool'>
+            <pre class=''>${data.html}</pre>
+          </div>`
+        );
+      } else if (type == "image") {
+        html += wrapBlock(
+          `<div class="cdx-block image-tool">
+            <div class="image-tool__image">
+              <div class="image-tool__image-preloader"></div>
+              <img class="image-tool__image-picture" alt="${
+                data.caption
+              }" src="${data.file.url}" title="${data.caption}">
+            </div>
+            <div class="cdx-input image-tool__caption" data-placeholder="Caption">${
+              data.caption
+            }</div>
+          </div>`
+        );
+      } else if (type == "warning") {
+        html += wrapBlock(`
+          <div><h4>${data.title}</h4><p>${data.message}</p></div>
+        `);
+      }
     }
 
-    var getIpInfoMiddleware = function (req, res, next) {
-        var xForwardedFor = (req.headers['x-forwarded-for'] || '').replace(/:\d+$/, '');
-        var ip = xForwardedFor || req.connection.remoteAddress;
-        req.ipInfo = getIpInfo(ip);
-        next();
-    }
-
+    return html;
+  };
+  var toMd = function() {
+    var html = toHtml();
+    var markdown = turndownService.turndown(html);
+    return markdown;
+  };
+  if (!type)
     return {
-        getIpInfoMiddleware,
-        getIpInfo,
-    }
-}
+      toHtml,
+      toMd
+    };
+  else {
+    if (type == "html") return toHtml();
+    else if (type == "md") return toMd();
+  }
+};

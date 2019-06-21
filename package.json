@@ -1,6 +1,6 @@
 {
   "name": "editorjs-converter",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "Converts editorjs json data output to HTML, MD, JSX",
   "main": "index.js",
   "scripts": {

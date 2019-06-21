@@ -4,16 +4,18 @@
   "description": "Converts editorjs json data output to HTML, MD, JSX",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node example.js"
   },
   "repository": "https://github.com/CITGuru/editorjs-converter.git",
   "keywords": [
-    "editorjs"
+    "editorjs",
+    "html",
+    "md",
+    "converter"
   ],
   "author": "[Oyetoke Toby](http://medium.com/@oyetoketoby80) <oyetoketoby80@gmail.com> ",
   "license": "MIT",
   "dependencies": {
-    "geoip-lite": "^1.2.2",
     "turndown": "^5.0.3"
   }
 }
